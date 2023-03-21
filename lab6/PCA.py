@@ -47,12 +47,12 @@ def norm_data(data):
     X = data.copy()
     ma = max(data)
     mi = min(data)
-    for i in range(len(data)):
+    for i in range(len(X)):
         X[i] = (X[i]-mi)/(ma-mi)
     return X
 
 
-def inverse_data(data, X):
+def inverse_norm_data(data, X):
     A = X.copy()
     ma = max(data)
     mi = min(data)
@@ -108,6 +108,7 @@ temp = F2C(temp)
 
 n = 365
 tn = 42
+# 42
 
 # data
 train_temp = temp[:-2*n]
@@ -132,12 +133,12 @@ t = data_trans(X)
 
 model = PCA(tn)
 XP = model.prediction(t, 365)
-XP = inverse_data(test_temp, XP)
+XP = inverse_norm_data(test_temp, XP)
 print(f"XP mse with normalize: {mean_square_error(test_temp_2018, XP)}")
 
 
 plt.plot(test_temp_2018, label="2018")
-plt.plot(XP, label="XP")
+plt.plot(XP, label="XP norm")
 plt.legend()
 
 plt.show()
@@ -150,7 +151,7 @@ plt.show()
 # for tn in range(10, 365):
 #     model = PCA(tn)
 #     XP = model.prediction(t, 365)
-#     XP = inverse_data(test_temp, XP)
+#     XP = inverse_norm_data(test_temp, XP)
 #     mse = mean_square_error(test_temp_2018, XP)
 #     print(f"{tn} {mse}")
 #     if mse < m:
