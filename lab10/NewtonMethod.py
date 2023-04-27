@@ -30,21 +30,25 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import axes3d
 
+# initial point
+x0 = 1
+y0 = 2
 
-a = 1
-b = 1
-c = 0
-x = np.array([a, 0, 0])
+# set function
+a = 0.5
+b = 0.5
+c = 10
+x = np.array([a**2, 2*a, 1])
 fx = np.poly1d(x)
 y = np.array([b, 0, 0])
 fy = np.poly1d(y)
+f = fx(x0)+fy(y0)+c  # z=(0.5x+1)^2+0.5y^2+10
 
-x0 = 1
-y0 = 2
-f = fx(x0)+fy(y0)+c
-
+# set lambda to prevent nan and set iter number
 l = 0.5
-n = 1000
+n = 50
+
+# newton method
 
 
 def newton_method(x0, y0, fx, fy, c, l, n):
@@ -58,13 +62,13 @@ def newton_method(x0, y0, fx, fy, c, l, n):
         y0 = y0-l*(dfy(y0)/ddfy(y0))
 
     z = fx(x0)+fy(y0)+c
-    print(f"x_min: {x0}\ny_min: {y0}\nz_min: {z}")
     return x0, y0, z
 
 
 a, b, c = newton_method(x0, y0, fx, fy, c, l, n)
+print(f"x_min: {a}\ny_min: {b}\nz_min: {c}")
 
-
+# plot the function
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
