@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 # parameters for gradient descend
-lr = 0.1
+lr = 0.2
 n = 100
 
 # parameters for paraboloid
@@ -11,11 +12,12 @@ b = 1
 c = 0
 
 # parameters for golden search
-x0 = -5
-x1 = 5
+j = -5
+k = 5
 
 
 def f(x, y):  # set function
+    # return a*x**2+b*y**2+c
     return a*(x-1)**2+b*(y+5)**2+c+x*y  # 14/3 -22/3 -46/3
 
 
@@ -48,26 +50,33 @@ def golden_search(f, x0, x1, threshold=1e-6):
     return x, y
 
 
-def gradient_descend(f, x0, y0, lr, n, threshold=1e-6):  # gradient_descend function
+# c_plot = []
+
+
+def gradient_descend(f, x0, y0, lr, n, split, threshold=1e-6):  # gradient_descend function
     for i in range(n):
         g = gradient(f, x0, y0)
-        print(f"iter: {i} norm: {np.linalg.norm(g)}")
+        # print(f"iter: {i} norm: {np.linalg.norm(g)}")
         if np.linalg.norm(g) < threshold:
             break
 
-        # min c
-        def tmp_f(c):
-            return f(x0+c*g[0], y0+c*g[1])
-        c, yc = golden_search(tmp_f, -200, 200, threshold=1e-6)
-        x0 = x0+c*g[0]
-        y0 = y0+c*g[1]
+        if split:
+            # min c
+            def tmp_f(c):
+                return f(x0+c*g[0], y0+c*g[1])
+            c, yc = golden_search(tmp_f, j, k, threshold=1e-6)
+            # c_plot.append(c)
+            x0 = x0+c*g[0]
+            y0 = y0+c*g[1]
 
-        # learning rate
-        # c = lr
-        # x0 = x0-c*g[0]
-        # y0 = y0-c*g[1]
+        else:
+            # learning rate
+            c = lr
+            x0 = x0-c*g[0]
+            y0 = y0-c*g[1]
 
     print(f"x_min: {x0}\ny_min: {y0}\nf_min: {f(x0, y0)}")
+    print(f"iter num: {i}")
 
 
 # set initial point
@@ -75,7 +84,21 @@ x0 = 1000
 y0 = 10
 
 # main function
-gradient_descend(f, x0, y0, lr, n)
+print("min_c")
+start = time.time()
+gradient_descend(f, x0, y0, lr, n, True)
+end = time.time()
+print(f"min_c sec: {end-start}\n")
+
+# print(c_plot)
+# plt.plot(c_plot)
+# plt.show()
+
+print("fix_c")
+start = time.time()
+gradient_descend(f, x0, y0, lr, n, False)
+end = time.time()
+print(f"fix_c sec: {end-start}\n")
 
 # # plot the function
 fig = plt.figure()
