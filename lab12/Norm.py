@@ -17,4 +17,6 @@ def norm(x, a):
 print(f"zero norm: {norm(x, 0)}")
 print(f"1-norm: {norm(x, 1)}")
 print(f"2-norm: {norm(x, 2)}")
+print(f"3-norm: {norm(x, 3)}")
 print(f"Infinity norm: {norm(x, np.inf)}")
+print(f"-Infinity norm: {norm(x, -np.inf)}")
