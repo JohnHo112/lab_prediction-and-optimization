@@ -1,14 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
-y = np.array([2, 3, 3, 4, 5, 4, 5])
-b = np.array(
-    [
-        [1, 1, 1, 1, 1, 1, 1],
-        [1, 2, 3, 4, 5, 6, 7],
-        [1, -1, 1, -1, 1, -1, 1],
-    ]
-)
+
 # b = np.array(
 #     [
 #         [2, 3, 3, 4, 5, 4, 5],
@@ -16,11 +10,15 @@ b = np.array(
 #         [2, 3, 3, 4, 5, 4, 5],
 #     ]
 # )
-a = 2
-x = np.array([0, 0, 0])
-
-lr = 0.0001
-n = 1000
+# test data 2
+# y = np.array([2, 3, 3, 4, 5, 4, 5, 4, 6, 7, 8, 9, 6, 10])
+# b = np.array(
+#     [
+#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+#         [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1],
+#     ]
+# )
 
 
 def F(x, b):
@@ -117,6 +115,7 @@ class Minimize:
 
 def plot_norm(y):
     plt.plot(y, label="norm record")
+    plt.legend()
     plt.figure()
 
 
@@ -128,12 +127,77 @@ def plot_y_f(x, y, b, n):
     plt.figure()
 
 
-X = np.arange(0, len(y), 1)
+################ test data2 useful function ###############
+def random_y(x, t):
+    a = np.zeros(len(x))
+    for i in range(len(x)):
+        a[i] = np.random.randint(i - t, i + t)
+    return a
+
+
+def sin(x):
+    return np.sin(x)
+
+
+def linear(x, a, b):
+    return a * x + b
+
+
+############### set parameters ################
+a = 1.5
+lr = 0.0001
+n = 1000
+
+############### test data1 ###############
+x = np.array([0, 0, 0])
+y = np.array([2, 3, 3, 4, 5, 4, 5])
+b = np.array(
+    [
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 2, 3, 4, 5, 6, 7],
+        [1, -1, 1, -1, 1, -1, 1],
+    ]
+)
 model = Minimize(y, b, x, a, lr, n)
 norm_record, x_record = model.gradient_descent()
 plot_norm(norm_record)
+plot_y_f(x_record, y, b, 0)
 plot_y_f(x_record, y, b, 50)
 plot_y_f(x_record, y, b, 999)
-plot_y_f(x_record, y, b, 0)
 
+print("test data1")
+print(f"iter 0 x: {x_record[0]}")
+print(f"norm: {norm_record[0]}")
+print(f"iter 50 x: {x_record[50]}")
+print(f"norm: {norm_record[50]}")
+print(f"iter 999 x: {x_record[999]}")
+print(f"norm: {norm_record[999]}")
+print("\n")
+plt.show()
+
+
+############### test data2 ###############
+x = np.array([0, 0, 0])
+yn = 50
+X = np.arange(0, yn, 1)
+Y = random_y(X, 20)
+b1 = sin(X)
+b2 = linear(X, 0.5, 0)
+b3 = np.ones(yn)
+b = np.array([b1, b2, b3])
+model1 = Minimize(Y, b, x, a, lr, n)
+norm_record1, x_record1 = model1.gradient_descent()
+
+plot_norm(norm_record1)
+plot_y_f(x_record1, Y, b, 0)
+plot_y_f(x_record1, Y, b, 50)
+plot_y_f(x_record1, Y, b, 999)
+
+print("test data2")
+print(f"iter 0 x: {x_record1[0]}")
+print(f"norm: {norm_record1[0]}")
+print(f"iter 50 x: {x_record1[50]}")
+print(f"norm: {norm_record1[50]}")
+print(f"iter 999 x: {x_record1[999]}")
+print(f"norm: {norm_record1[999]}")
 plt.show()
