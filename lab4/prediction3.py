@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import time
 
 # read data
-
-
 def readfile(filename):
     with open(filename) as f:
         lines = f.read()
@@ -176,7 +175,7 @@ class PredictionModel:  # model
         return XP
 
 
-filename = "temp2.txt"
+filename = "lab4/temp2.txt"
 date, temp = readfile(filename)
 temp = np.array(temp)
 temp = F2C(temp)
@@ -202,19 +201,22 @@ X = temp[-n-L:]
 W = uniform_weight(low, high, 10, 3, s)
 # W = gaussian_weight(mean, var, 10, 3, s)
 
-
+start = time.time()
 model = PredictionModel(L, a, W)  # create prediction mode
 model.find_optimal_value_weight(train_temp)  # find optimal value
 XP = model.prediction_a_year(X, 364)  # predict a year
+end = time.time()
+print(f"time: {end-start}")
 
-print("L: {0}\na: {1}\nlow: {2}\nhigh: {3}\ns: {4}".format(L, a, low, high, s))
+# print("L: {0}\na: {1}\nlow: {2}\nhigh: {3}\ns: {4}".format(L, a, low, high, s))
 # print("L: {0}\na: {1}\nvar: {2}\nmean: {3}".format(L, a, var, mean))
-print("XP mse: {0}".format(mean_square_error(
+print("mse: {0}".format(mean_square_error(
     test_temp_2018, XP)))
 
 
 # plot train data
 plt.plot(train_temp, label="train")
+plt.title("generalized nonlinear prediction training data")
 plt.xlabel("date (day)", fontsize=16)
 plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
@@ -225,12 +227,14 @@ plt.plot(W[1][:365], label="w2")
 plt.plot(W[2][:365], label="w3")
 plt.plot(W[3][:365], label="w4")
 plt.plot(W[4][:365], label="w5")
+plt.title("weight")
 plt.legend()
 plt.figure()
 
 # plot test data and prediction
 plt.plot(test_temp_2018, label="test")
 plt.plot(XP, label="prediction")
+plt.title("generalized nonlinear prediction testing data and prediction")
 plt.xlabel("date (day)", fontsize=16)
 plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()

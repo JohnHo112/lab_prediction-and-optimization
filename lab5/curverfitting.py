@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import time
 
 # read data
 
@@ -103,7 +104,7 @@ class PredictionModel:
         return XP
 
 
-filename = "temp2.txt"
+filename = "lab5/temp2.txt"
 date, temp = readfile(filename)
 temp = np.array(temp)
 temp = F2C(temp)
@@ -120,19 +121,26 @@ test_temp_2018 = temp[-n:]
 
 
 # # without weight
+start = time.time()
 M1 = 2
 trainN1 = 100
 w1 = np.ones(trainN1)
 model1 = PredictionModel(M1)
 XP1 = model1.prediction(temp[-n-trainN1:], trainN1, w1, 365)
-print(f"XP1 mse: {mean_square_error(test_temp_2018, XP1)}")
+end = time.time()
+print(f"without weight time: {end-start}")
+print(f"without weight mse: {mean_square_error(test_temp_2018, XP1)}")
 plt.plot(test_temp_2018, label="test")
-plt.plot(XP1, label="XP1")
+plt.plot(XP1, label="prediction")
+plt.title("curverfitting without weight")
+plt.xlabel("date (day)", fontsize=16)
+plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
 plt.figure()
 
 # # with weight
 # gassian
+start = time.time()
 M2 = 2
 trainN2 = 100
 mean = 350
@@ -140,13 +148,19 @@ var = 40
 w2 = norm_weight_array(mean, var, trainN2)
 model2 = PredictionModel(M2)
 XP2 = model2.prediction(temp[-n-trainN2:], trainN2, w2, 365)
-print(f"XP2 mse: {mean_square_error(test_temp_2018, XP2)}")
+end = time.time()
+print(f"with wegith time: {end-start}")
+print(f"with wegiht mse: {mean_square_error(test_temp_2018, XP2)}")
 plt.plot(test_temp_2018, label="test")
-plt.plot(XP2, label="XP2")
+plt.plot(XP2, label="prediction")
+plt.title("curverfitting with weight")
+plt.xlabel("date (day)", fontsize=16)
+plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
 plt.figure()
 
 plt.plot(w2)
+plt.title("weight")
 plt.show()
 
 # M3 = 2

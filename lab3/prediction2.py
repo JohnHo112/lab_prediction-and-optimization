@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 
 def readfile(filename):
@@ -102,7 +103,7 @@ def prediction_a_year(ak, bk, data, n):
     return XP
 
 
-filename = "temp1.txt"
+filename = "lab3/temp1.txt"
 date, temp = readfile(filename)
 temp = np.array(temp)
 temp = F2C(temp)
@@ -119,11 +120,14 @@ test_temp_2018 = temp[730:]
 L = 10
 n = 365  # number of prediction
 
+start = time.time()
 ak, bk = findOptimalValue(train_temp, L)
 # print(ak)
 # print(bk)
 X = temp[730-L:]
 XP = prediction_a_year(ak, bk, X, n)
+end = time.time()
+print(f"time: {end-start}")
 
 print("mse: {0}".format(mean_square_error(
     test_temp_2018, XP, n)))
@@ -131,14 +135,7 @@ print("mse: {0}".format(mean_square_error(
 
 # plot train data
 plt.plot(train_temp, label="train")
-plt.xlabel("date (day)", fontsize=16)
-plt.ylabel("tempearture (C)", fontsize=16)
-plt.legend()
-plt.figure()
-
-# plot train data and prediction
-plt.plot(train_temp, label="train")
-plt.plot(XP, label="prediction")
+plt.title("nonlinear model training data")
 plt.xlabel("date (day)", fontsize=16)
 plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
@@ -146,6 +143,7 @@ plt.figure()
 
 # plot test data and prediction
 plt.plot(test_temp_2018, label="test")
+plt.title("nonlinear model testing data and prediction")
 plt.plot(XP, label="prediction")
 plt.xlabel("date (day)", fontsize=16)
 plt.ylabel("tempearture (C)", fontsize=16)

@@ -29,10 +29,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import axes3d
+import time
 
 # initial point
-x0 = 1
-y0 = 2
+x0 = 6
+y0 = 8
 
 # set function
 a = 0.5
@@ -52,21 +53,27 @@ n = 50
 
 
 def newton_method(x0, y0, fx, fy, c, l, n):
+    path = []
     dfx = fx.deriv()
     ddfx = dfx.deriv()
     dfy = fy.deriv()
     ddfy = dfy.deriv()
 
     for _ in range(n):
+        path.append((x0, y0))
         x0 = x0-l*(dfx(x0)/ddfx(x0))
         y0 = y0-l*(dfy(y0)/ddfy(y0))
+    path.append((x0, y0))
+
 
     z = fx(x0)+fy(y0)+c
-    return x0, y0, z
+    return x0, y0, z, path
 
-
-a, b, c = newton_method(x0, y0, fx, fy, c, l, n)
+start = time.time()
+a, b, c, path = newton_method(x0, y0, fx, fy, c, l, n)
 print(f"x_min: {a}\ny_min: {b}\nz_min: {c}")
+end = time.time()
+print(f"time: {end-start}")
 
 # plot the function
 fig = plt.figure()
@@ -83,6 +90,11 @@ for i in x:
     z.append(t)
 z = np.array(z)
 
-ax.plot_surface(X, Y, z, cmap='rainbow')
+ax.plot_surface(X, Y, z, cmap='rainbow', alpha=0.5)
+x_path = np.array([i for i, j in path])
+y_path = np.array([j for i, j in path])
+z_path = fx(x_path)+fy(y_path)+c
+ax.plot3D(x_path, y_path, z_path, color="black", marker="x")
+plt.title("newton method")
 
 plt.show()

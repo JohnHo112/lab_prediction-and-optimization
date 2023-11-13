@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import time
 
 # read data
 
@@ -101,7 +102,7 @@ class PCA:
         return XP
 
 
-filename = "temp2.txt"
+filename = "lab6/temp2.txt"
 date, temp = readfile(filename)
 temp = np.array(temp)
 temp = F2C(temp)
@@ -118,12 +119,18 @@ test_temp_2018 = temp[-n:]
 # without normalize
 t = data_trans(test_temp)
 
+start = time.time()
 model = PCA(tn)
 XP = model.prediction(t, 365)
-print(f"XP mse without normalize: {mean_square_error(test_temp_2018, XP)}")
+end = time.time()
+print(f"without normalize time: {end-start}")
+print(f"mse without normalize: {mean_square_error(test_temp_2018, XP)}")
 
-plt.plot(test_temp_2018, label="2018")
-plt.plot(XP, label="XP")
+plt.plot(test_temp_2018, label="test")
+plt.plot(XP, label="prediction")
+plt.title("PCA without normalize")
+plt.xlabel("date (day)", fontsize=16)
+plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
 plt.figure()
 
@@ -131,14 +138,20 @@ plt.figure()
 X = norm_data(test_temp)
 t = data_trans(X)
 
+start = time.time()
 model = PCA(tn)
 XP = model.prediction(t, 365)
 XP = inverse_norm_data(test_temp, XP)
-print(f"XP mse with normalize: {mean_square_error(test_temp_2018, XP)}")
+end = time.time()
+print(f"with normalize time: {end-start}")
+print(f"mse with normalize: {mean_square_error(test_temp_2018, XP)}")
 
 
-plt.plot(test_temp_2018, label="2018")
-plt.plot(XP, label="XP norm")
+plt.plot(test_temp_2018, label="test")
+plt.plot(XP, label="prediction")
+plt.title("PCA with normalize")
+plt.xlabel("date (day)", fontsize=16)
+plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
 
 plt.show()

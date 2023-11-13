@@ -114,15 +114,18 @@ class Minimize:
 
 
 def plot_norm(y):
-    plt.plot(y, label="norm record")
-    plt.legend()
+    plt.plot(y)
+    plt.title("norm record")
+    plt.xlabel("iteration number")
+    plt.ylabel("error norm")
     plt.figure()
 
 
 def plot_y_f(x, y, b, n):
     X = np.arange(0, len(y), 1)
     plt.scatter(X, y, label="y")
-    plt.scatter(X, F(x[n], b), label=f"f{n}")
+    plt.scatter(X, F(x[n], b), label=f"iter{n} function")
+    plt.title("y and minimize function")
     plt.legend()
     plt.figure()
 

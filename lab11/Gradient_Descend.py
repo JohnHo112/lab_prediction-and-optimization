@@ -54,7 +54,9 @@ def golden_search(f, x0, x1, threshold=1e-6):
 
 
 def gradient_descend(f, x0, y0, lr, n, split, threshold=1e-6):  # gradient_descend function
+    path = []
     for i in range(n):
+        path.append((x0, y0))
         g = gradient(f, x0, y0)
         # print(f"iter: {i} norm: {np.linalg.norm(g)}")
         if np.linalg.norm(g) < threshold:
@@ -74,20 +76,24 @@ def gradient_descend(f, x0, y0, lr, n, split, threshold=1e-6):  # gradient_desce
             c = lr
             x0 = x0-c*g[0]
             y0 = y0-c*g[1]
+    path.append((x0, y0))
 
     print(f"x_min: {x0}\ny_min: {y0}\nf_min: {f(x0, y0)}")
     print(f"iter num: {i}")
+    return path
+
 
 
 # set initial point
-x0 = 1000
+x0 = 49
 y0 = 10
 
 # main function
 print("min_c")
 start = time.time()
-gradient_descend(f, x0, y0, lr, n, True)
+min_c_path = gradient_descend(f, x0, y0, lr, n, True)
 end = time.time()
+# print(min_c_path)
 print(f"min_c sec: {end-start}\n")
 
 # print(c_plot)
@@ -96,19 +102,33 @@ print(f"min_c sec: {end-start}\n")
 
 print("fix_c")
 start = time.time()
-gradient_descend(f, x0, y0, lr, n, False)
+fix_c_path = gradient_descend(f, x0, y0, lr, n, False)
+# print(fix_c_path)
 end = time.time()
 print(f"fix_c sec: {end-start}\n")
-
-# # plot the function
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
 
 x = np.arange(-50, 51)
 y = np.arange(-50, 51)
 X, Y = np.meshgrid(x, y)
 Z = f(X, Y)
 
-ax.plot_surface(X, Y, Z, cmap='rainbow')
+# # plot the function
+fig1 = plt.figure()
+plt.title("minimize learning rate")
+ax1 = fig1.add_subplot(111, projection='3d')
+
+ax1.plot_surface(X, Y, Z, cmap='rainbow', alpha=0.5)
+min_c_x = np.array([i for i, j in min_c_path])
+min_c_y = np.array([j for i, j in min_c_path])
+min_z = f(min_c_x, min_c_y)
+ax1.plot3D(min_c_x, min_c_y, min_z, color="red", marker="x")
+
+fig2 = plt.figure()
+plt.title("fix learning rate")
+ax2 = fig2.add_subplot(111, projection='3d')
+ax2.plot_surface(X, Y, Z, cmap='rainbow', alpha=0.5)
+fix_c_x = np.array([i for i, j in fix_c_path])
+fix_c_y = np.array([j for i, j in fix_c_path])
+ax2.plot3D(fix_c_x, fix_c_y, f(fix_c_x, fix_c_y), color="black", marker='x')
 
 plt.show()

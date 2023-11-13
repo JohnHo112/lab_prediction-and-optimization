@@ -59,7 +59,7 @@ def correlation(data1, data2):
     return cov/(std1*std2)
 
 
-filename = "temp2.txt"
+filename = "lab7/temp2.txt"
 date, temp = readfile(filename)
 temp = np.array(temp)
 temp = F2C(temp)
@@ -116,3 +116,6 @@ plt.figure()
 plt.plot(d, corrArr, label="corr curve")
 plt.legend()
 plt.show()
+
+# print(correlation(test_temp[365-91:-91], test_temp_2018))
+# print(np.corrcoef(test_temp[365-91:-91], test_temp_2018))

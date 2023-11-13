@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 
 def readfile(filename):
@@ -71,7 +72,7 @@ def prediction_a_year(ak, data, n):
     return XP
 
 
-filename = "temp1.txt"
+filename = "lab2/temp1.txt"
 date, temp = readfile(filename)
 temp = np.array(temp)
 temp = F2C(temp)
@@ -89,10 +90,12 @@ test_temp_2018 = temp[730:]
 L = 12
 n = 365  # number of prediction
 
-
+start = time.time()
 ak = findOptimalValue(train_temp, L)
 X = temp[730-L:]
 XP = prediction_a_year(ak, X, n)
+end = time.time()
+print(f"time: {end-start}")
 
 print("mse: {0}".format(mean_square_error(
     test_temp_2018, XP, n)))
@@ -100,6 +103,7 @@ print("mse: {0}".format(mean_square_error(
 
 # plot train data
 plt.plot(train_temp, label="train")
+plt.title("linear model training data")
 plt.xlabel("date (day)", fontsize=16)
 plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
@@ -108,6 +112,7 @@ plt.figure()
 # plot test data and prediction
 plt.plot(test_temp_2018, label="test")
 plt.plot(XP, label="prediction")
+plt.title("linear model testing data and prediction")
 plt.xlabel("date (day)", fontsize=16)
 plt.ylabel("tempearture (C)", fontsize=16)
 plt.legend()
